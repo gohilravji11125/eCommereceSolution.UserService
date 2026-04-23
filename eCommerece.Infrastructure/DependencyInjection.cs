@@ -1,6 +1,9 @@
 ﻿using eCommerece.Application.Interfaces;
 using eCommerece.Infrastructure.Options;
+using eCommerece.Infrastructure.Services.AuthenticationService;
 using eCommerece.Infrastructure.Services.DBConnectionService;
+using eCommerece.Infrastructure.Services.PasswordHasher;
+using eCommerece.Infrastructure.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,12 +18,14 @@ namespace eCommerece.Infrastructure
             services.Configure<ConnectionOptions>(configuration.GetSection("ConnectionString"));
             services.Configure<AuthenticationOptions>(configuration.GetSection("Jwt"));
             services.AddSingleton<IDBConnectionFactory,DBConnectionFactory>();
+            services.AddSingleton<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IUserService, UserService>();
             var jwtOptions = configuration.GetSection("Jwt").Get<AuthenticationOptions>();
             if(jwtOptions is null)
             {
                 throw new Exception("Jwt options are not configured properly.");
             }
-            services.AddSingleton<IPasswordHasher, Services.PasswordHasher.PasswordHasher>();
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

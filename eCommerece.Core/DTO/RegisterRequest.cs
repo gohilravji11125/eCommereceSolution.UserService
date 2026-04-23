@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace eCommerece.Core.DTO
 {
-    public record RegisterRequest(string Email,string Password,string PersonName);
+    public record RegisterRequest(string Email,string Password,string PersonName,string Gender);
 }
